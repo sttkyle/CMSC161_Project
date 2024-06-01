@@ -21,6 +21,7 @@ let moveRight = false;
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
+const vertex = new THREE.Vector3();
 
 // initialization
 function init() {
@@ -35,18 +36,7 @@ function init() {
     scene.background = new THREE.Color(0xffffff);
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
-    // TODO: testing mesh
-    // remove when done
-    const geometry = new THREE.BoxGeometry(20, 20, 20);
-    const material = new THREE.MeshPhongMaterial({ color: 0xff9999, wireframe: false });
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 20, 20);
-    mesh.receiveShadow = true;
-    mesh.castShadow = true;
-    // scene.add(mesh);
-
     // load models
-    // loadModels();
     const loader = new GLTFLoader();
     // beer barn
     loader.load('/models/beer.glb', function(gltf) {
@@ -96,12 +86,38 @@ function init() {
         console.error('Error loading model:', error);
     });
 
-
-
     // floor
-    let floorGeometry = new THREE.PlaneGeometry(1024, 1024, 100, 100);
-    floorGeometry.rotateX(- Math.PI / 2); // a plane along the x axis
-    let floorMaterial = new THREE.MeshPhongMaterial({ color: 0xdedede, wireframe: false });
+    let floorGeometry = new THREE.PlaneGeometry(2048, 2048, 100, 100);
+    floorGeometry.rotateX(-Math.PI / 2); // a plane along the x axis
+
+    // setting variable vertex positions
+    let position = floorGeometry.attributes.position;
+    for (let i = 0, l = position.count; i < l; i ++) {
+        vertex.fromBufferAttribute(position, i);
+
+        vertex.x += Math.random() * 20 - 10;
+        vertex.y += Math.random() * 2;
+        vertex.z += Math.random() * 20 - 10;
+
+        position.setXYZ(i, vertex.x, vertex.y, vertex.z);   // ching position of vertices along the floor to random values
+    }
+    // setting variable vertex colors
+    floorGeometry = floorGeometry.toNonIndexed();
+    position = floorGeometry.attributes.position;
+    const colors = [
+        new THREE.Color(0xDD9857),
+        new THREE.Color(0xCA8B5C),
+        new THREE.Color(0xCE8C4D),
+        new THREE.Color(0xB57C44),
+    ];
+    const colorsFloor = [];
+    for (let i = 0, l = position.count; i < l; i ++) {
+        let color = colors[Math.floor(Math.random() * colors.length)]
+        colorsFloor.push(color.r, color.g, color.b);
+    }
+    floorGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsFloor, 3));
+
+    let floorMaterial = new THREE.MeshPhongMaterial({ vertexColors: true });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
     scene.add(floor);
@@ -202,33 +218,6 @@ function init() {
     animate();
 }
 
-// model loader
-function loadModels() {
-    const loader = new GLTFLoader();
-    models.forEach((model, index) => {
-        loader.load(
-            model,
-            function(gltf) {
-                gltf.scene.traverse((child) => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                        child.scale.set(45, 45, 45);
-                        child.position.set(index * 50, -15, 0);
-                    }
-                });
-
-                scene.add(gltf.scene);
-                models.push(gltf.scene);
-            },
-            undefined,
-            function(error) {
-                console.error('Error loading model:', error);
-            }
-        )
-    })
-}
-
 // animation
 function animate() {
     requestAnimationFrame(animate);
@@ -241,7 +230,6 @@ function animate() {
 
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * 100.0 * delta; // for jump g = 9.8
 
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
@@ -253,10 +241,6 @@ function animate() {
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
     }
-
-    // updating mesh
-    // mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.01;
 
     prevTime = time;
     renderer.render(scene, camera);
