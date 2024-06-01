@@ -4,6 +4,16 @@ body {
     color: white;
 }
 
+img {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    width: 175px;
+    height: 175px;
+    position: absolute;
+    z-index: 1;
+}
+
 #blocker {
     position: absolute;
     width: 100%;
