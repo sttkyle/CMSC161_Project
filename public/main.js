@@ -19,6 +19,10 @@ let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 
+let woohooMp3 = document.getElementById('woohoosound');
+let clapMp3 = document.getElementById('clapsound');
+let drinkMp3 = document.getElementById('drinksound');
+
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -157,6 +161,15 @@ function init() {
             case 'ArrowRight':
             case 'KeyD':
                 moveRight = true;
+                break;
+            case 'Digit1':
+                woohooMp3.play();
+                break;
+            case 'Digit2':
+                clapMp3.play();
+                break;
+            case 'Digit3':
+                drinkMp3.play();
                 break;
         }
     };
