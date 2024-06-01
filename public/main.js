@@ -35,18 +35,7 @@ function init() {
     scene.background = new THREE.Color(0xffffff);
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
-    // TODO: testing mesh
-    // remove when done
-    const geometry = new THREE.BoxGeometry(20, 20, 20);
-    const material = new THREE.MeshPhongMaterial({ color: 0xff9999, wireframe: false });
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 20, 20);
-    mesh.receiveShadow = true;
-    mesh.castShadow = true;
-    // scene.add(mesh);
-
     // load models
-    // loadModels();
     const loader = new GLTFLoader();
     // beer barn
     loader.load('/models/beer.glb', function(gltf) {
@@ -95,8 +84,6 @@ function init() {
     }, undefined, function(error) {
         console.error('Error loading model:', error);
     });
-
-
 
     // floor
     let floorGeometry = new THREE.PlaneGeometry(1024, 1024, 100, 100);
@@ -202,33 +189,6 @@ function init() {
     animate();
 }
 
-// model loader
-function loadModels() {
-    const loader = new GLTFLoader();
-    models.forEach((model, index) => {
-        loader.load(
-            model,
-            function(gltf) {
-                gltf.scene.traverse((child) => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                        child.scale.set(45, 45, 45);
-                        child.position.set(index * 50, -15, 0);
-                    }
-                });
-
-                scene.add(gltf.scene);
-                models.push(gltf.scene);
-            },
-            undefined,
-            function(error) {
-                console.error('Error loading model:', error);
-            }
-        )
-    })
-}
-
 // animation
 function animate() {
     requestAnimationFrame(animate);
@@ -241,7 +201,6 @@ function animate() {
 
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * 100.0 * delta; // for jump g = 9.8
 
         direction.z = Number(moveForward) - Number(moveBackward);
         direction.x = Number(moveRight) - Number(moveLeft);
@@ -253,10 +212,6 @@ function animate() {
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
     }
-
-    // updating mesh
-    // mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.01;
 
     prevTime = time;
     renderer.render(scene, camera);
