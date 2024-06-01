@@ -30,12 +30,13 @@ function init() {
 
     // setup camera
     camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
-    camera.position.set(0, 10, 5);
+    camera.position.set(-400, 10, 575);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // setup scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 0, 750);
+    scene.fog = new THREE.Fog(0xffffff, 0, 1000);
 
     // load models
     loadModels()
@@ -59,10 +60,11 @@ function init() {
     floorGeometry = floorGeometry.toNonIndexed();
     position = floorGeometry.attributes.position;
     const colors = [
-        new THREE.Color(0xDD9857),
-        new THREE.Color(0xCA8B5C),
-        new THREE.Color(0xCE8C4D),
-        new THREE.Color(0xB57C44),
+        new THREE.Color(0x7C9D51),
+        new THREE.Color(0x4F7422),
+        new THREE.Color(0x62843B),
+        new THREE.Color(0x6F9137),
+        new THREE.Color(0x7EA44F),
     ];
     const colorsFloor = [];
     for (let i = 0, l = position.count; i < l; i ++) {
