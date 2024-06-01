@@ -128,12 +128,11 @@ function init() {
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // add light
+    // Add Ambient Light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    // TODO: fix lighting
-    // TODO: light frustum is too huge, resulting in pixelated shadows
+    // Add Directional Light
     const light = new THREE.DirectionalLight(0xffffff, 2.5);
     light.position.set(200, 200, 200);
     light.castShadow = true;
@@ -148,6 +147,19 @@ function init() {
     light.shadow.mapSize.height= 8192;
     scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
     scene.add(light);
+
+    // Add Craft Beer Model Point Lights
+    const pl = new THREE.PointLight(0xffffff, 1, 200, 0.9);
+    pl.position.set(2.5,19,9.5);
+    pl.castShadow=true;
+    scene.add(pl);
+    scene.add(new THREE.PointLightHelper(pl,0.5));
+    
+    const pl2 = new THREE.PointLight(0xffffff, 1, 200, 0.9);
+    pl2.position.set(2.5,19,85);
+    pl2.castShadow=true;
+    scene.add(pl2);
+    scene.add(new THREE.PointLightHelper(pl2,0.5));
 
     // setup renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
