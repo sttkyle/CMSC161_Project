@@ -105,8 +105,14 @@ function init() {
     // floor
     let floorGeometry = new THREE.PlaneGeometry(1024, 1024, 100, 100);
     floorGeometry.rotateX(- Math.PI / 2); // a plane along the x axis
-    let floorMaterial = new THREE.MeshPhongMaterial({ color: 0xdedede, wireframe: false });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+
+    //create the texture for the floor
+    const texture = new
+    THREE.TextureLoader().load('assets/grassland_texture.png');
+    const landmaterial = new THREE.MeshBasicMaterial({map:texture});
+
+    // let floorMaterial = new THREE.MeshPhongMaterial({ color: 0xdedede, wireframe: false });
+    const floor = new THREE.Mesh(floorGeometry, landmaterial);
     floor.receiveShadow = true;
     scene.add(floor);
 
