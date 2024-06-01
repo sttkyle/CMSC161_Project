@@ -5,13 +5,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // declarations
 let camera, scene, renderer, controls;
-const models = [
-    '/models/beer.glb',
-    '/models/dolab.glb',
-    '/models/ferris.glb',
-    '/models/sahara.glb',
-    '/models/spectra.glb'
-];
+// const models = [
+//     '/models/beer.glb',
+//     '/models/dolab.glb',
+//     '/models/ferris.glb',
+//     '/models/sahara.glb',
+//     '/models/spectra.glb'
+// ];
+const models = ['/models/scene.glb']
 
 let moveForward = false;
 let moveBackward = false;
