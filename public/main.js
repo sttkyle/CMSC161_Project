@@ -40,38 +40,62 @@ function init() {
     const loader = new GLTFLoader();
     // beer barn
     loader.load('/models/beer.glb', function(gltf) {
-        gltf.scene.receiveShadow = true;
-        gltf.scene.castShadow = true;
         gltf.scene.scale.set(45, 45, 45);
         gltf.scene.position.set(0, -15, 0)
+        gltf.scene.traverse( child => {
+            if( child.isMesh ) {
+                child.castShadow = true;
+                // child.frustumCulled = false;
+                child.receiveShadow = true;
+                // child.material = defaultMaterial;
+            }
+        } );
         scene.add(gltf.scene);
     }, undefined, function(error) {
         console.error('Error loading model:', error);
     });
     // dolab
     loader.load('/models/dolab.glb', function(gltf) {
-        gltf.scene.receiveShadow = true;
-        gltf.scene.castShadow = true;
         gltf.scene.scale.set(45, 45, 45);
         gltf.scene.position.set(0, -15, 0)
+        gltf.scene.traverse( child => {
+            if( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                // child.frustumCulled = false;
+                // child.material = defaultMaterial;
+            }
+        } );
         scene.add(gltf.scene);
     }, undefined, function(error) {
         console.error('Error loading model:', error);
     });
     loader.load('/models/ferris.glb', function(gltf) {
-        gltf.scene.receiveShadow = true;
-        gltf.scene.castShadow = true;
         gltf.scene.scale.set(45, 45, 45);
         gltf.scene.position.set(0, -15, 0)
+        gltf.scene.traverse( child => {
+            if( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                // child.frustumCulled = false;
+                // child.material = defaultMaterial;
+            }
+        } );
         scene.add(gltf.scene);
     }, undefined, function(error) {
         console.error('Error loading model:', error);
     });
     loader.load('/models/sahara.glb', function(gltf) {
-        gltf.scene.receiveShadow = true;
-        gltf.scene.castShadow = true;
         gltf.scene.scale.set(45, 45, 45);
         gltf.scene.position.set(0, -15, 0)
+        gltf.scene.traverse( child => {
+            if( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                // child.frustumCulled = false;
+                // child.material = defaultMaterial;
+            }
+        } );
         scene.add(gltf.scene);
     }, undefined, function(error) {
         console.error('Error loading model:', error);
@@ -122,29 +146,43 @@ function init() {
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // add light
+    // Add Ambient Light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    // TODO: fix lighting
-    // TODO: light frustum is too huge, resulting in pixelated shadows
+    // Add Directional Light
     const light = new THREE.DirectionalLight(0xffffff, 2.5);
     light.position.set(200, 200, 200);
     light.castShadow = true;
     // setup light frustum
     light.shadow.camera.near = 0.1;
-    light.shadow.camera.far = 1024;
-    light.shadow.camera.left = -512;
-    light.shadow.camera.right = 512;
+    light.shadow.camera.far = 1024; 
+    light.shadow.camera.left = 512;
+    light.shadow.camera.right = -512;
     light.shadow.camera.top = 512;
     light.shadow.camera.bottom = -512;
+    light.shadow.mapSize.width= 8192;
+    light.shadow.mapSize.height= 8192;
     scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
     scene.add(light);
+
+    // Add Craft Beer Model Point Lights
+    const pl = new THREE.PointLight(0xffffff, 1, 200, 0.9);
+    pl.position.set(2.5,19,9.5);
+    pl.castShadow=true;
+    scene.add(pl);
+    scene.add(new THREE.PointLightHelper(pl,0.5));
+    
+    const pl2 = new THREE.PointLight(0xffffff, 1, 200, 0.9);
+    pl2.position.set(2.5,19,85);
+    pl2.castShadow=true;
+    scene.add(pl2);
+    scene.add(new THREE.PointLightHelper(pl2,0.5));
 
     // setup renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.shadowMap.enabled = true; // enabling shadows
-    renderer.shadowMap.type = THREE.BasicShadowMap;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setSize(width, height);
     document.body.appendChild(renderer.domElement);
 
