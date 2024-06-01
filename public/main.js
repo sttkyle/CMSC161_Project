@@ -4,14 +4,15 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // declarations
-let camera, scene, renderer, controls, mesh;
-const models = [
-    '/models/beer.glb',
-    '/models/dolab.glb',
-    '/models/ferris.glb',
-    '/models/sahara.glb',
-    '/models/spectra.glb'
-];
+let camera, scene, renderer, controls;
+// const models = [
+//     '/models/beer.glb',
+//     '/models/dolab.glb',
+//     '/models/ferris.glb',
+//     '/models/sahara.glb',
+//     '/models/spectra.glb'
+// ];
+const models = ['/models/scene.glb']
 
 let moveForward = false;
 let moveBackward = false;
@@ -29,86 +30,16 @@ function init() {
 
     // setup camera
     camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
-    camera.position.set(0, 10, 5);
+    camera.position.set(-400, 10, 575);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // setup scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 0, 750);
+    scene.fog = new THREE.Fog(0xffffff, 0, 1000);
 
     // load models
-    const loader = new GLTFLoader();
-    // beer barn
-    loader.load('/models/beer.glb', function(gltf) {
-        gltf.scene.scale.set(45, 45, 45);
-        gltf.scene.position.set(0, -15, 0)
-        gltf.scene.traverse( child => {
-            if( child.isMesh ) {
-                child.castShadow = true;
-                // child.frustumCulled = false;
-                child.receiveShadow = true;
-                // child.material = defaultMaterial;
-            }
-        } );
-        scene.add(gltf.scene);
-    }, undefined, function(error) {
-        console.error('Error loading model:', error);
-    });
-    // dolab
-    loader.load('/models/dolab.glb', function(gltf) {
-        gltf.scene.scale.set(45, 45, 45);
-        gltf.scene.position.set(0, -15, 0)
-        gltf.scene.traverse( child => {
-            if( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                // child.frustumCulled = false;
-                // child.material = defaultMaterial;
-            }
-        } );
-        scene.add(gltf.scene);
-    }, undefined, function(error) {
-        console.error('Error loading model:', error);
-    });
-    loader.load('/models/ferris.glb', function(gltf) {
-        gltf.scene.scale.set(45, 45, 45);
-        gltf.scene.position.set(0, -15, 0)
-        gltf.scene.traverse( child => {
-            if( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                // child.frustumCulled = false;
-                // child.material = defaultMaterial;
-            }
-        } );
-        scene.add(gltf.scene);
-    }, undefined, function(error) {
-        console.error('Error loading model:', error);
-    });
-    loader.load('/models/sahara.glb', function(gltf) {
-        gltf.scene.scale.set(45, 45, 45);
-        gltf.scene.position.set(0, -15, 0)
-        gltf.scene.traverse( child => {
-            if( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                // child.frustumCulled = false;
-                // child.material = defaultMaterial;
-            }
-        } );
-        scene.add(gltf.scene);
-    }, undefined, function(error) {
-        console.error('Error loading model:', error);
-    });
-    loader.load('/models/spectra.glb', function(gltf) {
-        gltf.scene.receiveShadow = true;
-        gltf.scene.castShadow = true;
-        gltf.scene.scale.set(45, 45, 45);
-        gltf.scene.position.set(0, -15, 0)
-        scene.add(gltf.scene);
-    }, undefined, function(error) {
-        console.error('Error loading model:', error);
-    });
+    loadModels()
 
     // floor
     let floorGeometry = new THREE.PlaneGeometry(2048, 2048, 100, 100);
@@ -123,16 +54,17 @@ function init() {
         vertex.y += Math.random() * 2;
         vertex.z += Math.random() * 20 - 10;
 
-        position.setXYZ(i, vertex.x, vertex.y, vertex.z);   // ching position of vertices along the floor to random values
+        position.setXYZ(i, vertex.x, vertex.y, vertex.z);   // change position of vertices along the floor to random values
     }
     // setting variable vertex colors
     floorGeometry = floorGeometry.toNonIndexed();
     position = floorGeometry.attributes.position;
     const colors = [
-        new THREE.Color(0xDD9857),
-        new THREE.Color(0xCA8B5C),
-        new THREE.Color(0xCE8C4D),
-        new THREE.Color(0xB57C44),
+        new THREE.Color(0x7C9D51),
+        new THREE.Color(0x4F7422),
+        new THREE.Color(0x62843B),
+        new THREE.Color(0x6F9137),
+        new THREE.Color(0x7EA44F),
     ];
     const colorsFloor = [];
     for (let i = 0, l = position.count; i < l; i ++) {
@@ -254,6 +186,32 @@ function init() {
     document.addEventListener('keyup', onKeyUp);
 
     animate();
+}
+
+function loadModels() {
+    const loader = new GLTFLoader();
+    models.forEach((model) => {
+        loader.load(
+            model,
+            function(gltf) {
+                gltf.scene.scale.set(45, 45, 45);
+                gltf.scene.position.set(0, -15, 0)
+                gltf.scene.traverse(child => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        // child.frustumCulled = false;
+                        // child.material = defaultMaterial;
+                    }
+                });
+                scene.add(gltf.scene);
+            },
+            undefined,
+            function(error) {
+                console.error('Error loading model:', error);
+            }
+        )
+    })
 }
 
 // animation
