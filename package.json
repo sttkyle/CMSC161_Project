@@ -3,6 +3,7 @@
     "three": "^0.165.0"
   },
   "devDependencies": {
+    "runjs": "^4.4.2",
     "vite": "^5.2.12"
   }
 }
