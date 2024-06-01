@@ -1,10 +1,17 @@
 // imports
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // declarations
 let camera, scene, renderer, controls, mesh;
-const objects = [];
+const models = [
+    '/models/beer.glb',
+    '/models/dolab.glb',
+    '/models/ferris.glb',
+    '/models/sahara.glb',
+    '/models/spectra.glb'
+];
 
 let moveForward = false;
 let moveBackward = false;
@@ -25,23 +32,76 @@ function init() {
 
     // setup scene
     scene = new THREE.Scene();
-    // scene.background = new THREE.Color(0xffffff);
-    // scene.fog = new THREE.Fog(0xffffff, 0, 750);
+    scene.background = new THREE.Color(0xffffff);
+    scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
     // TODO: testing mesh
-    // add mesh 
+    // remove when done
     const geometry = new THREE.BoxGeometry(20, 20, 20);
     const material = new THREE.MeshPhongMaterial({ color: 0xff9999, wireframe: false });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(0, 20, 20);
     mesh.receiveShadow = true;
     mesh.castShadow = true;
-    scene.add(mesh);
+    // scene.add(mesh);
+
+    // load models
+    // loadModels();
+    const loader = new GLTFLoader();
+    // beer barn
+    loader.load('/models/beer.glb', function(gltf) {
+        gltf.scene.receiveShadow = true;
+        gltf.scene.castShadow = true;
+        gltf.scene.scale.set(45, 45, 45);
+        gltf.scene.position.set(0, -15, 0)
+        scene.add(gltf.scene);
+    }, undefined, function(error) {
+        console.error('Error loading model:', error);
+    });
+    // dolab
+    loader.load('/models/dolab.glb', function(gltf) {
+        gltf.scene.receiveShadow = true;
+        gltf.scene.castShadow = true;
+        gltf.scene.scale.set(45, 45, 45);
+        gltf.scene.position.set(0, -15, 0)
+        scene.add(gltf.scene);
+    }, undefined, function(error) {
+        console.error('Error loading model:', error);
+    });
+    loader.load('/models/ferris.glb', function(gltf) {
+        gltf.scene.receiveShadow = true;
+        gltf.scene.castShadow = true;
+        gltf.scene.scale.set(45, 45, 45);
+        gltf.scene.position.set(0, -15, 0)
+        scene.add(gltf.scene);
+    }, undefined, function(error) {
+        console.error('Error loading model:', error);
+    });
+    loader.load('/models/sahara.glb', function(gltf) {
+        gltf.scene.receiveShadow = true;
+        gltf.scene.castShadow = true;
+        gltf.scene.scale.set(45, 45, 45);
+        gltf.scene.position.set(0, -15, 0)
+        scene.add(gltf.scene);
+    }, undefined, function(error) {
+        console.error('Error loading model:', error);
+    });
+    loader.load('/models/spectra.glb', function(gltf) {
+        gltf.scene.receiveShadow = true;
+        gltf.scene.castShadow = true;
+        gltf.scene.scale.set(45, 45, 45);
+        gltf.scene.position.set(0, -15, 0)
+        scene.add(gltf.scene);
+    }, undefined, function(error) {
+        console.error('Error loading model:', error);
+    });
+
+
 
     // floor
-    let floorGeometry = new THREE.PlaneGeometry(512, 512, 100, 100);
+    let floorGeometry = new THREE.PlaneGeometry(1024, 1024, 100, 100);
     floorGeometry.rotateX(- Math.PI / 2); // a plane along the x axis
-    let floorMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: false });
+    let floorMaterial = new THREE.MeshPhongMaterial({ color: 0xdedede, wireframe: false });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
     scene.add(floor);
@@ -142,6 +202,33 @@ function init() {
     animate();
 }
 
+// model loader
+function loadModels() {
+    const loader = new GLTFLoader();
+    models.forEach((model, index) => {
+        loader.load(
+            model,
+            function(gltf) {
+                gltf.scene.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        child.scale.set(45, 45, 45);
+                        child.position.set(index * 50, -15, 0);
+                    }
+                });
+
+                scene.add(gltf.scene);
+                models.push(gltf.scene);
+            },
+            undefined,
+            function(error) {
+                console.error('Error loading model:', error);
+            }
+        )
+    })
+}
+
 // animation
 function animate() {
     requestAnimationFrame(animate);
@@ -168,8 +255,8 @@ function animate() {
     }
 
     // updating mesh
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
+    // mesh.rotation.x += 0.01;
+    // mesh.rotation.y += 0.01;
 
     prevTime = time;
     renderer.render(scene, camera);
