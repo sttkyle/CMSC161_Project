@@ -1,0 +1,178 @@
+// imports
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+
+// declarations
+let camera, scene, renderer, controls, mesh;
+const objects = [];
+
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+
+let prevTime = performance.now();
+const velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
+
+// initialization
+function init() {
+    const width = window.innerWidth, height = window.innerHeight;
+
+    // setup camera
+    camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
+    camera.position.set(0, 10, 5);
+
+    // setup scene
+    scene = new THREE.Scene();
+    // scene.background = new THREE.Color(0xffffff);
+    // scene.fog = new THREE.Fog(0xffffff, 0, 750);
+
+    // TODO: testing mesh
+    // add mesh 
+    const geometry = new THREE.BoxGeometry(20, 20, 20);
+    const material = new THREE.MeshPhongMaterial({ color: 0xff9999, wireframe: false });
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(0, 20, 20);
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add(mesh);
+
+    // floor
+    let floorGeometry = new THREE.PlaneGeometry(512, 512, 100, 100);
+    floorGeometry.rotateX(- Math.PI / 2); // a plane along the x axis
+    let floorMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: false });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // add light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // TODO: fix lighting
+    // TODO: light frustum is too huge, resulting in pixelated shadows
+    const light = new THREE.DirectionalLight(0xffffff, 2.5);
+    light.position.set(200, 200, 200);
+    light.castShadow = true;
+    // setup light frustum
+    light.shadow.camera.near = 0.1;
+    light.shadow.camera.far = 1024;
+    light.shadow.camera.left = -512;
+    light.shadow.camera.right = 512;
+    light.shadow.camera.top = 512;
+    light.shadow.camera.bottom = -512;
+    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
+    scene.add(light);
+
+    // setup renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.shadowMap.enabled = true; // enabling shadows
+    renderer.shadowMap.type = THREE.BasicShadowMap;
+    renderer.setSize(width, height);
+    document.body.appendChild(renderer.domElement);
+
+    // setup controller
+    // ref: https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_pointerlock.html
+    const blocker = document.getElementById('blocker'); 
+    const instructions = document.getElementById('instructions'); // dom element to "disable" or "enable" mouse while on instruction screen
+
+    controls = new PointerLockControls(camera, renderer.domElement);
+    instructions.addEventListener('click', function() {
+        controls.lock();
+    });
+
+    controls.addEventListener('lock', function() {  // if controls are locked, remove dom elements
+        instructions.style.display = 'none';
+        blocker.style.display = 'none';
+    });
+    controls.addEventListener('unlock', function() {  // else show them again
+        blocker.style.display = 'block';
+        instructions.style.display = '';
+    });
+
+    scene.add(controls.getObject());
+
+    // movement key listeners
+    const onKeyDown = function(event) {
+        switch (event.code) {
+            case 'ArrowUp':
+            case 'KeyW':
+                moveForward = true;
+                break;
+            case 'ArrowLeft':
+            case 'KeyA':
+                moveLeft = true;
+                break;
+            case 'ArrowDown':
+            case 'KeyS':
+                moveBackward = true;
+                break;
+            case 'ArrowRight':
+            case 'KeyD':
+                moveRight = true;
+                break;
+        }
+    };
+
+    const onKeyUp = function(event) {
+        switch (event.code) {
+            case 'ArrowUp':
+            case 'KeyW':
+                moveForward = false;
+                break;
+            case 'ArrowLeft':
+            case 'KeyA':
+                moveLeft = false;
+                break;
+            case 'ArrowDown':
+            case 'KeyS':
+                moveBackward = false;
+                break;
+            case 'ArrowRight':
+            case 'KeyD':
+                moveRight = false;
+                break;
+        }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+
+    animate();
+}
+
+// animation
+function animate() {
+    requestAnimationFrame(animate);
+
+    const time = performance.now();
+
+    // updating controller
+    if (controls.isLocked === true) {
+        const delta = ( time - prevTime ) / 1000;
+
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
+        velocity.y -= 9.8 * 100.0 * delta; // for jump g = 9.8
+
+        direction.z = Number(moveForward) - Number(moveBackward);
+        direction.x = Number(moveRight) - Number(moveLeft);
+        direction.normalize(); 
+
+        if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+
+        controls.moveRight(-velocity.x * delta);
+        controls.moveForward(-velocity.z * delta);
+    }
+
+    // updating mesh
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.01;
+
+    prevTime = time;
+    renderer.render(scene, camera);
+}
+
+init();
