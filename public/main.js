@@ -27,6 +27,10 @@ const clapGIF = "public/assets/clapping.gif";
 const woohooGIF = "public/assets/woohoo.gif";
 const drinkGIF = "public/assets/drinking.gif";
 
+const saharaTitle = "public/assets/sahara.png";
+const wheelTitle = "public/assets/wheel.png";
+const beerTitle = "public/assets/beerbarn.png";
+
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -117,20 +121,6 @@ function init() {
 
     scene.add(controls.getObject());
 
-    // show interaction GIFs
-    function showGIF(gifSRC, delayEnter, delayExit) {
-        var action = document.createElement("img");
-        action.src = gifSRC;
-
-        setTimeout(function () {
-            document.body.appendChild(action);
-        }, delayEnter);
-
-        setTimeout(function () {
-            document.body.removeChild(action);
-        }, delayExit);
-    }
-
     // movement key listeners
     const onKeyDown = function(event) {
         switch (event.code) {
@@ -190,6 +180,33 @@ function init() {
     document.addEventListener('keyup', onKeyUp);
 
     animate();
+}
+
+// show interaction GIFs
+function showGIF(gifSRC, delayEnter, delayExit) {
+    var action = document.createElement("img");
+    action.src = gifSRC;
+
+    setTimeout(function () {
+        document.body.appendChild(action);
+    }, delayEnter);
+
+    setTimeout(function () {
+        document.body.removeChild(action);
+    }, delayExit);
+}
+
+function showImage(imgSRC, delayEnter, delayExit){
+    var action = document.createElement("interface");
+    action.src = imgSRC;
+
+    setTimeout(function () {
+        document.body.appendChild(action);
+    }, delayEnter);
+
+    setTimeout(function () {
+        document.body.removeChild(action);
+    }, delayExit);
 }
 
 function loadModels() {
@@ -299,6 +316,35 @@ function loadLights(){
     scene.add(new THREE.PointLightHelper(pl3,0.5));
 }
 
+// Check Landmark Interface
+
+function checkLandmarkInterface(){
+    // Position of Camera
+    console.log(camera.position.x + ", " + camera.position.z);
+    
+    // Bounds of Landmarks
+    const saharaMinX = -464.0, saharaMaxX = 241.0, saharaMinZ = 44, saharaMaxZ = 579;
+    const wheelMinX = -501.0 , wheelMaxX= -237.0, wheelMinZ= -310.0, wheelMaxZ= 21.0;
+    const barnMinX = 250.0, barnMaxX = 451.0, barnMinZ = -9.0, barnMaxZ = 147.0;
+    const labMinX = 250.0, labMaxX = 451.0, labMinZ = -9.0, labMaxZ = 147.0;
+    
+    // Checks if within bounds of Sahara Stage
+    if (camera.position.x >= saharaMinX && camera.position.x <= saharaMaxX && camera.position.z >= saharaMinZ && camera.position.z <= saharaMaxZ){
+        showGIF(saharaTitle, 1000, 1500);
+    }
+
+    // Checks if within bounds of Le Grande Wheel
+    if (camera.position.x >= wheelMinX && camera.position.x <= wheelMaxX && camera.position.z >= wheelMinZ && camera.position.z <= wheelMaxZ){
+        showGIF(wheelTitle, 1000, 1500);
+    }
+
+    // Checks if within bounds of Beer Barn
+    if (camera.position.x >= barnMinX && camera.position.x <= barnMaxX && camera.position.z >= barnMinZ && camera.position.z <= barnMaxZ){
+        showGIF(beerTitle, 1000, 1500);
+    }
+    
+}
+
 // animation
 function animate() {
     requestAnimationFrame(animate);
@@ -321,6 +367,8 @@ function animate() {
 
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
+
+        checkLandmarkInterface();
     }
 
     prevTime = time;
