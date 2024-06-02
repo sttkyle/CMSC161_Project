@@ -259,27 +259,44 @@ function loadLights(){
     const penumbra = 0.5;
     const decay = 0.5;
 
-    const sl =  new THREE.SpotLight(0xA020F0, 400.0, distance, angle, penumbra, decay);
-    sl.position.set(-200,100,500);
-    sl.target.position.set(200,-50,220);
+    const sl =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
+    sl.position.set(-140,100,500);
+    sl.target.position.set(-280,30,350);
+    sl.castShadow=true;
     scene.add(sl);
     scene.add(sl.target);
-    scene.add(new THREE.SpotLightHelper(sl));
+    // scene.add(new THREE.SpotLightHelper(sl));
 
-    const sl2 =  new THREE.SpotLight(0xA020F0, 400.0, distance, angle, penumbra, decay);
-    sl2.position.set(0,110,220);
-    sl2.target.position.set(-100,-70,650);
+    const sl2 =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
+    sl2.position.set(-10,100,300);
+    sl2.target.position.set(-280,0,150);
+    sl2.castShadow=true;
     scene.add(sl2);
     scene.add(sl2.target);
-    scene.add(new THREE.SpotLightHelper(sl2));
+    // scene.add(new THREE.SpotLightHelper(sl2));
 
     const sl3 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
-    sl3.position.set(-280,100,260);
+    sl3.position.set(-260,100,260);
     sl3.target.position.set(250,10,550);
+    sl3.castShadow=true;
     scene.add(sl3);
     scene.add(sl3.target);
-    scene.add(new THREE.SpotLightHelper(sl3));
+    // scene.add(new THREE.SpotLightHelper(sl3));
 
+    const sl4 =  new THREE.SpotLight(0xf2ad73, 200.0, distance, (Math.PI/3.0), 0.7, decay);
+    sl4.position.set(-180,130,300);
+    sl4.target.position.set(-180,0,300);
+    sl4.castShadow=true;
+    scene.add(sl4);
+    scene.add(sl4.target);
+    // scene.add(new THREE.SpotLightHelper(sl4));
+
+    // Add Do Lab Stage Lighting
+    const pl3 = new THREE.PointLight(0xffffff, 20, 200, 0.7);
+    pl3.position.set(615,70,370);
+    pl3.castShadow=true;
+    scene.add(pl3);
+    scene.add(new THREE.PointLightHelper(pl3,0.5));
 }
 
 // animation
@@ -299,8 +316,8 @@ function animate() {
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize(); 
 
-        if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
-        if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 2000.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 2000.0 * delta;
 
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
