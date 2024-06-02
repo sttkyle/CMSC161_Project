@@ -441,13 +441,34 @@ function loadLights(){
     pl3.castShadow=true;
     scene.add(pl3);
     // scene.add(new THREE.PointLightHelper(pl3,0.5));
+
+    // Add Le Grande Wheel Point Lights
+    const pl4 = new THREE.PointLight(0xffffff, 300, 200, 0.7);
+    pl4.position.set(-323,12,-85);
+    pl4.castShadow=true;
+    scene.add(pl4);
+    // scene.add(new THREE.PointLightHelper(pl4,0.5));
+
+    const pl5 = new THREE.PointLight(0xffffff, 300, 200, 0.7);
+    pl5.position.set(-400,12,-201);
+    pl5.castShadow=true;
+    scene.add(pl5);
+    // scene.add(new THREE.PointLightHelper(pl5,0.5));
+
+    const sl5 =  new THREE.SpotLight(0xffffff, 100.0, distance, (Math.PI/3.0), 0.7, decay);
+    sl5.position.set(-276,1,-214);
+    sl5.target.position.set(-360,90,-147);
+    sl5.castShadow=true;
+    scene.add(sl5);
+    scene.add(sl5.target);
+    // scene.add(new THREE.SpotLightHelper(sl5));
 }
 
 // Check Landmark Interface
 
 function checkLandmarkInterface(){
     // Position of Camera
-    // console.log(camera.position.x + ", " + camera.position.z);
+    console.log(camera.position.x + ", " + camera.position.z);
     
     // Bounds of Landmarks
     const saharaMinX = -464.0, saharaMaxX = 241.0, saharaMinZ = 44, saharaMaxZ = 579;
