@@ -128,20 +128,6 @@ function init() {
 
     scene.add(controls.getObject());
 
-    // show interaction GIFs
-    function showGIF(gifSRC, delayEnter, delayExit) {
-        var action = document.createElement("img");
-        action.src = gifSRC;
-
-        setTimeout(function () {
-            document.body.appendChild(action);
-        }, delayEnter);
-
-        setTimeout(function () {
-            document.body.removeChild(action);
-        }, delayExit);
-    }
-
     // Media player
     let track_list = [
         { source : "public/assets/Espresso.mp3",
@@ -465,6 +451,7 @@ function checkLandmarkInterface(){
     const wheelMinX = -501.0 , wheelMaxX= -237.0, wheelMinZ= -310.0, wheelMaxZ= 21.0;
     const barnMinX = 250.0, barnMaxX = 451.0, barnMinZ = -9.0, barnMaxZ = 147.0;
     const labMinX = 250.0, labMaxX = 451.0, labMinZ = -9.0, labMaxZ = 147.0;
+    const spectraMinX = 250.0, spectraMaxX = 451.0, spectraMinZ = -9.0, spectraMaxZ = 147.0;
     
     // Checks if within bounds of Sahara Stage
     if (camera.position.x >= saharaMinX && camera.position.x <= saharaMaxX && camera.position.z >= saharaMinZ && camera.position.z <= saharaMaxZ){
