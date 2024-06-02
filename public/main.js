@@ -23,6 +23,10 @@ let woohooMp3 = document.getElementById('woohoosound');
 let clapMp3 = document.getElementById('clapsound');
 let drinkMp3 = document.getElementById('drinksound');
 
+const clapGIF = "public/assets/clapping.gif";
+const woohooGIF = "public/assets/woohoo.gif";
+const drinkGIF = "public/assets/drinking.gif";
+
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -143,6 +147,20 @@ function init() {
 
     scene.add(controls.getObject());
 
+    // show interaction GIFs
+    function showGIF(gifSRC, delayEnter, delayExit) {
+        var action = document.createElement("img");
+        action.src = gifSRC;
+
+        setTimeout(function () {
+            document.body.appendChild(action);
+        }, delayEnter);
+
+        setTimeout(function () {
+            document.body.removeChild(action);
+        }, delayExit);
+    }
+
     // movement key listeners
     const onKeyDown = function(event) {
         switch (event.code) {
@@ -164,12 +182,15 @@ function init() {
                 break;
             case 'Digit1':
                 woohooMp3.play();
+                showGIF(woohooGIF, 1000, 2250);
                 break;
             case 'Digit2':
                 clapMp3.play();
+                showGIF(clapGIF, 200, 3000);
                 break;
             case 'Digit3':
                 drinkMp3.play();
+                showGIF(drinkGIF, 0, 2000)
                 break;
         }
     };
