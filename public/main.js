@@ -58,10 +58,10 @@ function init() {
     scene = new THREE.Scene();
     // scene.background = new THREE.Color(0xffffff);
     const loader = new THREE.TextureLoader();
-        loader.load('public/assets/ferdinand-stohr-iW1WzbuWMcA-unsplash.jpg' , 
-        function(texture) {
-             scene.background = texture;  
-            });
+    loader.load('public/assets/ferdinand-stohr-iW1WzbuWMcA-unsplash.jpg' , 
+    function(texture) {
+        scene.background = texture;  
+    });
     scene.fog = new THREE.Fog(0xe3c5d1, 0, 1000);
 
     // load models
