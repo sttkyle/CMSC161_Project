@@ -34,6 +34,10 @@ const pauseSVG = "public/assets/pause_circle_24dp_FILL0_wght400_GRAD0_opsz24.svg
 const nextSVG = "public/assets/skip_next_24dp_FILL0_wght400_GRAD0_opsz24.svg";
 const prevSVG = "public/assets/skip_previous_24dp_FILL0_wght400_GRAD0_opsz24.svg";
 
+const saharaTitle = "public/assets/sahara.png";
+const wheelTitle = "public/assets/wheel.png";
+const beerTitle = "public/assets/beerbarn.png";
+
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -93,38 +97,8 @@ function init() {
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // Add Ambient Light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    // Add Directional Light
-    const light = new THREE.DirectionalLight(0xffffff, 2.5);
-    light.position.set(200, 200, 200);
-    light.castShadow = true;
-    // setup light frustum
-    light.shadow.camera.near = 0.1;
-    light.shadow.camera.far = 1024; 
-    light.shadow.camera.left = 512;
-    light.shadow.camera.right = -512;
-    light.shadow.camera.top = 512;
-    light.shadow.camera.bottom = -512;
-    light.shadow.mapSize.width= 8192;
-    light.shadow.mapSize.height= 8192;
-    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
-    scene.add(light);
-
-    // Add Craft Beer Model Point Lights
-    const pl = new THREE.PointLight(0xffffff, 1, 200, 0.9);
-    pl.position.set(2.5,19,9.5);
-    pl.castShadow=true;
-    scene.add(pl);
-    scene.add(new THREE.PointLightHelper(pl,0.5));
-    
-    const pl2 = new THREE.PointLight(0xffffff, 1, 200, 0.9);
-    pl2.position.set(2.5,19,85);
-    pl2.castShadow=true;
-    scene.add(pl2);
-    scene.add(new THREE.PointLightHelper(pl2,0.5));
+    // Load Lights into Scene
+    loadLights();
 
     // setup renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -171,16 +145,16 @@ function init() {
     // Media player
     let track_list = [
         { source : "public/assets/Espresso.mp3",
-         songInfo : "Espresso - Sabrina Carpenter"
+            songInfo : "Espresso - Sabrina Carpenter"
         },
         { source : "public/assets/HOT TO GO!.mp3",
-         songInfo : "HOT TO GO! - Chapell Roan"
+            songInfo : "HOT TO GO! - Chapell Roan"
         },
         { source : "public/assets/ANTIFRAGILE.mp3",
-         songInfo : "ANTIFRAGILE - LE SSERAFIM"
+            songInfo : "ANTIFRAGILE - LE SSERAFIM"
         },
         { source : "public/assets/怪物.mp3",
-         songInfo : "怪物 - YOASOBI"
+            songInfo : "怪物 - YOASOBI"
         },
 
     ];
@@ -346,6 +320,33 @@ function init() {
     animate();
 }
 
+// show interaction GIFs
+function showGIF(gifSRC, delayEnter, delayExit) {
+    var action = document.createElement("img");
+    action.src = gifSRC;
+
+    setTimeout(function () {
+        document.body.appendChild(action);
+    }, delayEnter);
+
+    setTimeout(function () {
+        document.body.removeChild(action);
+    }, delayExit);
+}
+
+function showImage(imgSRC, delayEnter, delayExit){
+    var action = document.createElement("interface");
+    action.src = imgSRC;
+
+    setTimeout(function () {
+        document.body.appendChild(action);
+    }, delayEnter);
+
+    setTimeout(function () {
+        document.body.removeChild(action);
+    }, delayExit);
+}
+
 function loadModels() {
     const loader = new GLTFLoader();
     models.forEach((model) => {
@@ -372,6 +373,116 @@ function loadModels() {
     })
 }
 
+function loadLights(){
+    // Add Ambient Light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // Add Directional Light
+    const light = new THREE.DirectionalLight(0xffffff, 2.5);
+    light.position.set(800, 200, 400);
+    light.castShadow = true;
+    // setup light frustum
+    light.shadow.camera.near = 0.1;
+    light.shadow.camera.far = 2024; 
+    light.shadow.camera.left = 512;
+    light.shadow.camera.right = -512;
+    light.shadow.camera.top = 512;
+    light.shadow.camera.bottom = -512;
+    light.shadow.mapSize.width= 8192;
+    light.shadow.mapSize.height= 8192;
+    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
+    scene.add(light);
+
+    // Add Craft Beer Model Point Lights
+    const pl = new THREE.PointLight(0xffffff, 5, 200, 0.7);
+    pl.position.set(300,19,112);
+    pl.castShadow=true;
+    scene.add(pl);
+    scene.add(new THREE.PointLightHelper(pl,0.5));
+    
+    const pl2 = new THREE.PointLight(0xffffff, 3, 200, 0.7);
+    pl2.position.set(375.5,19,112);
+    pl2.castShadow=true;
+    scene.add(pl2);
+    scene.add(new THREE.PointLightHelper(pl2,0.5));
+
+    // Add Sahara Stage Spotlights
+    const distance = 400.0;
+    const angle = Math.PI / 6.5;
+    const angle2 = Math.PI / 10;
+    const penumbra = 0.5;
+    const decay = 0.5;
+
+    const sl =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
+    sl.position.set(-140,100,500);
+    sl.target.position.set(-280,30,350);
+    sl.castShadow=true;
+    scene.add(sl);
+    scene.add(sl.target);
+    // scene.add(new THREE.SpotLightHelper(sl));
+
+    const sl2 =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
+    sl2.position.set(-10,100,300);
+    sl2.target.position.set(-280,0,150);
+    sl2.castShadow=true;
+    scene.add(sl2);
+    scene.add(sl2.target);
+    // scene.add(new THREE.SpotLightHelper(sl2));
+
+    const sl3 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
+    sl3.position.set(-260,100,260);
+    sl3.target.position.set(250,10,550);
+    sl3.castShadow=true;
+    scene.add(sl3);
+    scene.add(sl3.target);
+    // scene.add(new THREE.SpotLightHelper(sl3));
+
+    const sl4 =  new THREE.SpotLight(0xf2ad73, 200.0, distance, (Math.PI/3.0), 0.7, decay);
+    sl4.position.set(-180,130,300);
+    sl4.target.position.set(-180,0,300);
+    sl4.castShadow=true;
+    scene.add(sl4);
+    scene.add(sl4.target);
+    // scene.add(new THREE.SpotLightHelper(sl4));
+
+    // Add Do Lab Stage Lighting
+    const pl3 = new THREE.PointLight(0xffffff, 20, 200, 0.7);
+    pl3.position.set(615,70,370);
+    pl3.castShadow=true;
+    scene.add(pl3);
+    scene.add(new THREE.PointLightHelper(pl3,0.5));
+}
+
+// Check Landmark Interface
+
+function checkLandmarkInterface(){
+    // Position of Camera
+    console.log(camera.position.x + ", " + camera.position.z);
+    
+    // Bounds of Landmarks
+    const saharaMinX = -464.0, saharaMaxX = 241.0, saharaMinZ = 44, saharaMaxZ = 579;
+    const wheelMinX = -501.0 , wheelMaxX= -237.0, wheelMinZ= -310.0, wheelMaxZ= 21.0;
+    const barnMinX = 250.0, barnMaxX = 451.0, barnMinZ = -9.0, barnMaxZ = 147.0;
+    const labMinX = 250.0, labMaxX = 451.0, labMinZ = -9.0, labMaxZ = 147.0;
+    
+    // Checks if within bounds of Sahara Stage
+    if (camera.position.x >= saharaMinX && camera.position.x <= saharaMaxX && camera.position.z >= saharaMinZ && camera.position.z <= saharaMaxZ){
+        showGIF(saharaTitle, 1000, 1500);
+    }
+
+    // Checks if within bounds of Le Grande Wheel
+    if (camera.position.x >= wheelMinX && camera.position.x <= wheelMaxX && camera.position.z >= wheelMinZ && camera.position.z <= wheelMaxZ){
+        showGIF(wheelTitle, 1000, 1500);
+    }
+
+    // Checks if within bounds of Beer Barn
+    if (camera.position.x >= barnMinX && camera.position.x <= barnMaxX && camera.position.z >= barnMinZ && camera.position.z <= barnMaxZ){
+        showGIF(beerTitle, 1000, 1500);
+    }
+    
+}
+
 // animation
 function animate() {
     requestAnimationFrame(animate);
@@ -389,11 +500,13 @@ function animate() {
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize(); 
 
-        if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
-        if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 2000.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 2000.0 * delta;
 
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
+
+        checkLandmarkInterface();
     }
 
     prevTime = time;
