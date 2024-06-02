@@ -56,8 +56,13 @@ function init() {
 
     // setup scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
-    scene.fog = new THREE.Fog(0xffffff, 0, 1000);
+    // scene.background = new THREE.Color(0xffffff);
+    const loader = new THREE.TextureLoader();
+    loader.load('public/assets/ferdinand-stohr-iW1WzbuWMcA-unsplash.jpg' , 
+    function(texture) {
+        scene.background = texture;  
+    });
+    scene.fog = new THREE.Fog(0xe3c5d1, 0, 1000);
 
     // load models
     loadModels()
@@ -225,6 +230,28 @@ function init() {
         }, 4000);
     }
 
+    let isUserManualOpen = false;
+    function showUserManual() {
+        if (!isUserManualOpen) {
+            openNav();
+            isUserManualOpen = true;
+        } else {
+            closeNav();
+            isUserManualOpen = false;
+        }
+    }
+
+    function openNav() {
+        document.getElementById("userManual").style.width = "250px";
+        document.body.style.marginLeft = "250px";
+      }
+      
+    function closeNav() {
+    document.getElementById("userManual").style.width = "0";
+    document.body.style.marginLeft = "0";
+    }
+
+
     // movement key listeners
     const onKeyDown = function(event) {
         switch (event.code) {
@@ -269,6 +296,9 @@ function init() {
             case 'KeyE':
                 nextSong();
                 break;
+            case 'ShiftLeft':
+                showUserManual();
+                break;
                 
         }
         ambientMp3.play();
@@ -311,6 +341,7 @@ function init() {
 // show interaction GIFs
 function showGIF(gifSRC, delayEnter, delayExit) {
     var action = document.createElement("img");
+    action.setAttribute("id", "action");
     action.src = gifSRC;
 
     setTimeout(function () {
