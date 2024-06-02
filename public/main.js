@@ -225,6 +225,28 @@ function init() {
         }, 4000);
     }
 
+    let isUserManualOpen = false;
+    function showUserManual() {
+        if (!isUserManualOpen) {
+            openNav();
+            isUserManualOpen = true;
+        } else {
+            closeNav();
+            isUserManualOpen = false;
+        }
+    }
+
+    function openNav() {
+        document.getElementById("userManual").style.width = "250px";
+        document.body.style.marginLeft = "250px";
+      }
+      
+    function closeNav() {
+    document.getElementById("userManual").style.width = "0";
+    document.body.style.marginLeft = "0";
+    }
+
+
     // movement key listeners
     const onKeyDown = function(event) {
         switch (event.code) {
@@ -269,6 +291,9 @@ function init() {
             case 'KeyE':
                 nextSong();
                 break;
+            case 'ShiftLeft':
+                showUserManual();
+                break;
                 
         }
         ambientMp3.play();
@@ -311,6 +336,7 @@ function init() {
 // show interaction GIFs
 function showGIF(gifSRC, delayEnter, delayExit) {
     var action = document.createElement("img");
+    action.setAttribute("id", "action");
     action.src = gifSRC;
 
     setTimeout(function () {
