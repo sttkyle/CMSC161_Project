@@ -380,7 +380,7 @@ function loadLights(){
     light.shadow.camera.bottom = -512;
     light.shadow.mapSize.width= 8192;
     light.shadow.mapSize.height= 8192;
-    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
+    // scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
     scene.add(light);
 
     // Add Craft Beer Model Point Lights
