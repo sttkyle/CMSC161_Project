@@ -27,6 +27,11 @@ const clapGIF = "public/assets/clapping.gif";
 const woohooGIF = "public/assets/woohoo.gif";
 const drinkGIF = "public/assets/drinking.gif";
 
+const playSVG = "public/assets/play_circle_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+const pauseSVG = "public/assets/pause_circle_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+const nextSVG = "public/assets/skip_next_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+const prevSVG = "public/assets/skip_previous_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -162,13 +167,25 @@ function init() {
     }
 
     // Media player
-    let track_list = ["public/assets/Espresso.mp3", 
-        "public/assets/HOT TO GO!.mp3",
+    let track_list = [
+        { source : "public/assets/Espresso.mp3",
+         songInfo : "Espresso - Sabrina Carpenter"
+        },
+        { source : "public/assets/HOT TO GO!.mp3",
+         songInfo : "HOT TO GO! - Chapell Roan"
+        },
+        { source : "public/assets/ANTIFRAGILE.mp3",
+         songInfo : "ANTIFRAGILE - LE SSERAFIM"
+        },
+        { source : "public/assets/怪物.mp3",
+         songInfo : "怪物 - YOASOBI"
+        },
+
     ];
     let track_index = 0;
     let isPlaying = false;
     let curr_track = document.createElement("audio");
-    curr_track.src = track_list[track_index];
+    curr_track.src = track_list[track_index].source;
 
     function playPauseMusic() {
         if(!isPlaying) {
@@ -178,22 +195,15 @@ function init() {
     }
 
     function playMusic() {
-        
         curr_track.play();
         isPlaying = true;
+        showMusic(playSVG);
     }
 
     function pauseMusic() {
         curr_track.pause();
         isPlaying = false;
-    }
-
-    
-    function loadMusic(index) {
-        curr_track.src = track_list[index];
-        curr_track.load();
-
-        curr_track.addEventListener("ended", nextSong());
+        showMusic(pauseSVG);
     }
 
     function nextSong() {
@@ -203,8 +213,10 @@ function init() {
             track_index = 0;
         }
 
-        curr_track.src = track_list[track_index];
+        curr_track.src = track_list[track_index].source;
         playMusic();
+
+        showMusic(nextSVG);
     }
 
     function prevSong() {
@@ -215,8 +227,38 @@ function init() {
             track_index = track_list.length - 1;
         }
 
-        curr_track.src = track_list[track_index];
+        curr_track.src = track_list[track_index].source;
         playMusic();
+
+        showMusic(prevSVG);
+    }
+
+    // show media controls
+    function showMusic(source) {
+        var mediaControl = document.createElement("img");
+        mediaControl.setAttribute("id", "mediaIcon");
+        mediaControl.src = source;
+
+        var songDetails = document.createElement("text");
+        songDetails.setAttribute("id", "songInfo");
+
+        document.body.appendChild(mediaControl);
+        songDetails.innerHTML = track_list[track_index].songInfo;
+
+        var divControl = document.createElement("div");
+        
+        divControl.appendChild(mediaControl);
+        divControl.appendChild(songDetails);
+        
+        divControl.setAttribute("id", "divIconSong");
+
+        
+        document.body.appendChild(divControl);
+        
+
+        setTimeout(function () {
+            document.body.removeChild(divControl);
+        }, 4000);
     }
 
     // movement key listeners
