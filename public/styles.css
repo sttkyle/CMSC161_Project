@@ -2,6 +2,8 @@ body {
     margin: 0; 
     font-family:'Courier New', Courier, monospace;
     color: white;
+    background: linear-gradient(0deg, #face8d 50%, aquamarine 100%);
+    overflow: hidden;
     transition: margin-left .5s;
 }
 
