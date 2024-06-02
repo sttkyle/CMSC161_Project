@@ -22,6 +22,8 @@ let moveRight = false;
 let woohooMp3 = document.getElementById('woohoosound');
 let clapMp3 = document.getElementById('clapsound');
 let drinkMp3 = document.getElementById('drinksound');
+let walkingMp3 = document.getElementById('walkingsound');
+let ambientMp3 = document.getElementById('ambientsound');
 
 const clapGIF = "public/assets/clapping.gif";
 const woohooGIF = "public/assets/woohoo.gif";
@@ -166,18 +168,22 @@ function init() {
         switch (event.code) {
             case 'ArrowUp':
             case 'KeyW':
+                walkingMp3.play();
                 moveForward = true;
                 break;
             case 'ArrowLeft':
             case 'KeyA':
+                walkingMp3.play();
                 moveLeft = true;
                 break;
             case 'ArrowDown':
             case 'KeyS':
+                walkingMp3.play();
                 moveBackward = true;
                 break;
             case 'ArrowRight':
             case 'KeyD':
+                walkingMp3.play();
                 moveRight = true;
                 break;
             case 'Digit1':
@@ -193,27 +199,35 @@ function init() {
                 showGIF(drinkGIF, 0, 2000)
                 break;
         }
+        ambientMp3.play();
+        ambientMp3.volume = 0.15;
     };
 
     const onKeyUp = function(event) {
         switch (event.code) {
             case 'ArrowUp':
             case 'KeyW':
+                walkingMp3.pause();
                 moveForward = false;
                 break;
             case 'ArrowLeft':
             case 'KeyA':
+                walkingMp3.pause();
                 moveLeft = false;
                 break;
             case 'ArrowDown':
             case 'KeyS':
+                walkingMp3.pause();
                 moveBackward = false;
                 break;
             case 'ArrowRight':
             case 'KeyD':
+                walkingMp3.pause();
                 moveRight = false;
                 break;
         }
+        ambientMp3.play();
+        ambientMp3.volume = 0.20;
     };
 
     document.addEventListener('keydown', onKeyDown);
