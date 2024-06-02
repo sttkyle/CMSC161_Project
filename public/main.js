@@ -22,10 +22,17 @@ let moveRight = false;
 let woohooMp3 = document.getElementById('woohoosound');
 let clapMp3 = document.getElementById('clapsound');
 let drinkMp3 = document.getElementById('drinksound');
+let walkingMp3 = document.getElementById('walkingsound');
+let ambientMp3 = document.getElementById('ambientsound');
 
 const clapGIF = "public/assets/clapping.gif";
 const woohooGIF = "public/assets/woohoo.gif";
 const drinkGIF = "public/assets/drinking.gif";
+
+const playSVG = "public/assets/play_circle_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+const pauseSVG = "public/assets/pause_circle_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+const nextSVG = "public/assets/skip_next_24dp_FILL0_wght400_GRAD0_opsz24.svg";
+const prevSVG = "public/assets/skip_previous_24dp_FILL0_wght400_GRAD0_opsz24.svg";
 
 const saharaTitle = "public/assets/sahara.png";
 const wheelTitle = "public/assets/wheel.png";
@@ -121,23 +128,136 @@ function init() {
 
     scene.add(controls.getObject());
 
+    // show interaction GIFs
+    function showGIF(gifSRC, delayEnter, delayExit) {
+        var action = document.createElement("img");
+        action.src = gifSRC;
+
+        setTimeout(function () {
+            document.body.appendChild(action);
+        }, delayEnter);
+
+        setTimeout(function () {
+            document.body.removeChild(action);
+        }, delayExit);
+    }
+
+    // Media player
+    let track_list = [
+        { source : "public/assets/Espresso.mp3",
+            songInfo : "Espresso - Sabrina Carpenter"
+        },
+        { source : "public/assets/HOT TO GO!.mp3",
+            songInfo : "HOT TO GO! - Chapell Roan"
+        },
+        { source : "public/assets/ANTIFRAGILE.mp3",
+            songInfo : "ANTIFRAGILE - LE SSERAFIM"
+        },
+        { source : "public/assets/怪物.mp3",
+            songInfo : "怪物 - YOASOBI"
+        },
+
+    ];
+    let track_index = 0;
+    let isPlaying = false;
+    let curr_track = document.createElement("audio");
+    curr_track.src = track_list[track_index].source;
+
+    function playPauseMusic() {
+        if(!isPlaying) {
+            playMusic();
+        
+        } else pauseMusic();
+    }
+
+    function playMusic() {
+        curr_track.play();
+        isPlaying = true;
+        showMusic(playSVG);
+    }
+
+    function pauseMusic() {
+        curr_track.pause();
+        isPlaying = false;
+        showMusic(pauseSVG);
+    }
+
+    function nextSong() {
+        if (track_index < track_list.length - 1) {
+            track_index += 1;
+        } else {
+            track_index = 0;
+        }
+
+        curr_track.src = track_list[track_index].source;
+        playMusic();
+
+        showMusic(nextSVG);
+    }
+
+    function prevSong() {
+        if (track_index > 0) {
+            track_index -= 1;
+        } 
+        else {
+            track_index = track_list.length - 1;
+        }
+
+        curr_track.src = track_list[track_index].source;
+        playMusic();
+
+        showMusic(prevSVG);
+    }
+
+    // show media controls
+    function showMusic(source) {
+        var mediaControl = document.createElement("img");
+        mediaControl.setAttribute("id", "mediaIcon");
+        mediaControl.src = source;
+
+        var songDetails = document.createElement("text");
+        songDetails.setAttribute("id", "songInfo");
+
+        document.body.appendChild(mediaControl);
+        songDetails.innerHTML = track_list[track_index].songInfo;
+
+        var divControl = document.createElement("div");
+        
+        divControl.appendChild(mediaControl);
+        divControl.appendChild(songDetails);
+        
+        divControl.setAttribute("id", "divIconSong");
+
+        
+        document.body.appendChild(divControl);
+        
+
+        setTimeout(function () {
+            document.body.removeChild(divControl);
+        }, 4000);
+    }
+
     // movement key listeners
     const onKeyDown = function(event) {
         switch (event.code) {
             case 'ArrowUp':
             case 'KeyW':
+                walkingMp3.play();
                 moveForward = true;
                 break;
             case 'ArrowLeft':
             case 'KeyA':
+                walkingMp3.play();
                 moveLeft = true;
                 break;
             case 'ArrowDown':
             case 'KeyS':
+                walkingMp3.play();
                 moveBackward = true;
                 break;
             case 'ArrowRight':
             case 'KeyD':
+                walkingMp3.play();
                 moveRight = true;
                 break;
             case 'Digit1':
@@ -152,28 +272,46 @@ function init() {
                 drinkMp3.play();
                 showGIF(drinkGIF, 0, 2000)
                 break;
+            case 'Space':
+                playPauseMusic();
+                break;
+            case 'KeyQ':
+                prevSong();
+                break;
+            case 'KeyE':
+                nextSong();
+                break;
+                
         }
+        ambientMp3.play();
+        ambientMp3.volume = 0.15;
     };
 
     const onKeyUp = function(event) {
         switch (event.code) {
             case 'ArrowUp':
             case 'KeyW':
+                walkingMp3.pause();
                 moveForward = false;
                 break;
             case 'ArrowLeft':
             case 'KeyA':
+                walkingMp3.pause();
                 moveLeft = false;
                 break;
             case 'ArrowDown':
             case 'KeyS':
+                walkingMp3.pause();
                 moveBackward = false;
                 break;
             case 'ArrowRight':
             case 'KeyD':
+                walkingMp3.pause();
                 moveRight = false;
                 break;
         }
+        ambientMp3.play();
+        ambientMp3.volume = 0.20;
     };
 
     document.addEventListener('keydown', onKeyDown);
@@ -374,5 +512,7 @@ function animate() {
     prevTime = time;
     renderer.render(scene, camera);
 }
+
+
 
 init();
