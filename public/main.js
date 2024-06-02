@@ -259,19 +259,19 @@ function loadLights(){
     const penumbra = 0.5;
     const decay = 0.5;
 
-    // const sl =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
-    // sl.position.set(-200,100,500);
-    // sl.target.position.set(200,-50,220);
-    // scene.add(sl);
-    // scene.add(sl.target);
-    // scene.add(new THREE.SpotLightHelper(sl));
+    const sl =  new THREE.SpotLight(0xA020F0, 400.0, distance, angle, penumbra, decay);
+    sl.position.set(-200,100,500);
+    sl.target.position.set(200,-50,220);
+    scene.add(sl);
+    scene.add(sl.target);
+    scene.add(new THREE.SpotLightHelper(sl));
 
-    // const sl2 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
-    // sl2.position.set(0,110,220);
-    // sl2.target.position.set(-100,-70,650);
-    // scene.add(sl2);
-    // scene.add(sl2.target);
-    // scene.add(new THREE.SpotLightHelper(sl2));
+    const sl2 =  new THREE.SpotLight(0xA020F0, 400.0, distance, angle, penumbra, decay);
+    sl2.position.set(0,110,220);
+    sl2.target.position.set(-100,-70,650);
+    scene.add(sl2);
+    scene.add(sl2.target);
+    scene.add(new THREE.SpotLightHelper(sl2));
 
     const sl3 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
     sl3.position.set(-280,100,260);
@@ -279,14 +279,6 @@ function loadLights(){
     scene.add(sl3);
     scene.add(sl3.target);
     scene.add(new THREE.SpotLightHelper(sl3));
-
-    // const sl4 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
-    // sl4.position.set(0,110,220);
-    // sl4.target.position.set(-100,-70,650);
-    // scene.add(sl4);
-    // scene.add(sl4.target);
-    // scene.add(new THREE.SpotLightHelper(sl4));
-
 
 }
 
@@ -307,8 +299,8 @@ function animate() {
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize(); 
 
-        if (moveForward || moveBackward) velocity.z -= direction.z * 2000.0 * delta;
-        if (moveLeft || moveRight) velocity.x -= direction.x * 2000.0 * delta;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
 
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
