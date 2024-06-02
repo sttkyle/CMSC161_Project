@@ -388,13 +388,13 @@ function loadLights(){
     pl.position.set(300,19,112);
     pl.castShadow=true;
     scene.add(pl);
-    scene.add(new THREE.PointLightHelper(pl,0.5));
+    // scene.add(new THREE.PointLightHelper(pl,0.5));
     
     const pl2 = new THREE.PointLight(0xffffff, 3, 200, 0.7);
     pl2.position.set(375.5,19,112);
     pl2.castShadow=true;
     scene.add(pl2);
-    scene.add(new THREE.PointLightHelper(pl2,0.5));
+    // scene.add(new THREE.PointLightHelper(pl2,0.5));
 
     // Add Sahara Stage Spotlights
     const distance = 400.0;
@@ -404,7 +404,7 @@ function loadLights(){
     const decay = 0.5;
 
     const sl =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
-    sl.position.set(-140,100,500);
+    sl.position.set(-140,90,500);
     sl.target.position.set(-280,30,350);
     sl.castShadow=true;
     scene.add(sl);
@@ -412,7 +412,7 @@ function loadLights(){
     // scene.add(new THREE.SpotLightHelper(sl));
 
     const sl2 =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
-    sl2.position.set(-10,100,300);
+    sl2.position.set(-10,90,300);
     sl2.target.position.set(-280,0,150);
     sl2.castShadow=true;
     scene.add(sl2);
@@ -420,7 +420,7 @@ function loadLights(){
     // scene.add(new THREE.SpotLightHelper(sl2));
 
     const sl3 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
-    sl3.position.set(-260,100,260);
+    sl3.position.set(-260,90,260);
     sl3.target.position.set(250,10,550);
     sl3.castShadow=true;
     scene.add(sl3);
@@ -428,7 +428,7 @@ function loadLights(){
     // scene.add(new THREE.SpotLightHelper(sl3));
 
     const sl4 =  new THREE.SpotLight(0xf2ad73, 200.0, distance, (Math.PI/3.0), 0.7, decay);
-    sl4.position.set(-180,130,300);
+    sl4.position.set(-180,120,300);
     sl4.target.position.set(-180,0,300);
     sl4.castShadow=true;
     scene.add(sl4);
@@ -440,14 +440,14 @@ function loadLights(){
     pl3.position.set(615,70,370);
     pl3.castShadow=true;
     scene.add(pl3);
-    scene.add(new THREE.PointLightHelper(pl3,0.5));
+    // scene.add(new THREE.PointLightHelper(pl3,0.5));
 }
 
 // Check Landmark Interface
 
 function checkLandmarkInterface(){
     // Position of Camera
-    console.log(camera.position.x + ", " + camera.position.z);
+    // console.log(camera.position.x + ", " + camera.position.z);
     
     // Bounds of Landmarks
     const saharaMinX = -464.0, saharaMaxX = 241.0, saharaMinZ = 44, saharaMaxZ = 579;
