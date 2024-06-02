@@ -86,38 +86,8 @@ function init() {
     floor.receiveShadow = true;
     scene.add(floor);
 
-    // Add Ambient Light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    // Add Directional Light
-    const light = new THREE.DirectionalLight(0xffffff, 2.5);
-    light.position.set(200, 200, 200);
-    light.castShadow = true;
-    // setup light frustum
-    light.shadow.camera.near = 0.1;
-    light.shadow.camera.far = 1024; 
-    light.shadow.camera.left = 512;
-    light.shadow.camera.right = -512;
-    light.shadow.camera.top = 512;
-    light.shadow.camera.bottom = -512;
-    light.shadow.mapSize.width= 8192;
-    light.shadow.mapSize.height= 8192;
-    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
-    scene.add(light);
-
-    // Add Craft Beer Model Point Lights
-    const pl = new THREE.PointLight(0xffffff, 1, 200, 0.9);
-    pl.position.set(2.5,19,9.5);
-    pl.castShadow=true;
-    scene.add(pl);
-    scene.add(new THREE.PointLightHelper(pl,0.5));
-    
-    const pl2 = new THREE.PointLight(0xffffff, 1, 200, 0.9);
-    pl2.position.set(2.5,19,85);
-    pl2.castShadow=true;
-    scene.add(pl2);
-    scene.add(new THREE.PointLightHelper(pl2,0.5));
+    // Load Lights into Scene
+    loadLights();
 
     // setup renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -248,6 +218,78 @@ function loadModels() {
     })
 }
 
+function loadLights(){
+    // Add Ambient Light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // Add Directional Light
+    const light = new THREE.DirectionalLight(0xffffff, 2.5);
+    light.position.set(800, 200, 400);
+    light.castShadow = true;
+    // setup light frustum
+    light.shadow.camera.near = 0.1;
+    light.shadow.camera.far = 2024; 
+    light.shadow.camera.left = 512;
+    light.shadow.camera.right = -512;
+    light.shadow.camera.top = 512;
+    light.shadow.camera.bottom = -512;
+    light.shadow.mapSize.width= 8192;
+    light.shadow.mapSize.height= 8192;
+    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
+    scene.add(light);
+
+    // Add Craft Beer Model Point Lights
+    const pl = new THREE.PointLight(0xffffff, 5, 200, 0.7);
+    pl.position.set(300,19,112);
+    pl.castShadow=true;
+    scene.add(pl);
+    scene.add(new THREE.PointLightHelper(pl,0.5));
+    
+    const pl2 = new THREE.PointLight(0xffffff, 3, 200, 0.7);
+    pl2.position.set(375.5,19,112);
+    pl2.castShadow=true;
+    scene.add(pl2);
+    scene.add(new THREE.PointLightHelper(pl2,0.5));
+
+    // Add Sahara Stage Spotlights
+    const distance = 400.0;
+    const angle = Math.PI / 6.5;
+    const angle2 = Math.PI / 10;
+    const penumbra = 0.5;
+    const decay = 0.5;
+
+    // const sl =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
+    // sl.position.set(-200,100,500);
+    // sl.target.position.set(200,-50,220);
+    // scene.add(sl);
+    // scene.add(sl.target);
+    // scene.add(new THREE.SpotLightHelper(sl));
+
+    // const sl2 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
+    // sl2.position.set(0,110,220);
+    // sl2.target.position.set(-100,-70,650);
+    // scene.add(sl2);
+    // scene.add(sl2.target);
+    // scene.add(new THREE.SpotLightHelper(sl2));
+
+    const sl3 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
+    sl3.position.set(-280,100,260);
+    sl3.target.position.set(250,10,550);
+    scene.add(sl3);
+    scene.add(sl3.target);
+    scene.add(new THREE.SpotLightHelper(sl3));
+
+    // const sl4 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
+    // sl4.position.set(0,110,220);
+    // sl4.target.position.set(-100,-70,650);
+    // scene.add(sl4);
+    // scene.add(sl4.target);
+    // scene.add(new THREE.SpotLightHelper(sl4));
+
+
+}
+
 // animation
 function animate() {
     requestAnimationFrame(animate);
@@ -265,8 +307,8 @@ function animate() {
         direction.x = Number(moveRight) - Number(moveLeft);
         direction.normalize(); 
 
-        if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
-        if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+        if (moveForward || moveBackward) velocity.z -= direction.z * 2000.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 2000.0 * delta;
 
         controls.moveRight(-velocity.x * delta);
         controls.moveForward(-velocity.z * delta);
