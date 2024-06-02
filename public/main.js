@@ -37,6 +37,8 @@ const prevSVG = "public/assets/skip_previous_24dp_FILL0_wght400_GRAD0_opsz24.svg
 const saharaTitle = "public/assets/sahara.png";
 const wheelTitle = "public/assets/wheel.png";
 const beerTitle = "public/assets/beerbarn.png";
+const labTitle = "public/assets/lab.png";
+const spectraTitle = "public/assets/spectra.png";
 
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
@@ -127,20 +129,6 @@ function init() {
     });
 
     scene.add(controls.getObject());
-
-    // show interaction GIFs
-    function showGIF(gifSRC, delayEnter, delayExit) {
-        var action = document.createElement("img");
-        action.src = gifSRC;
-
-        setTimeout(function () {
-            document.body.appendChild(action);
-        }, delayEnter);
-
-        setTimeout(function () {
-            document.body.removeChild(action);
-        }, delayExit);
-    }
 
     // Media player
     let track_list = [
@@ -335,7 +323,8 @@ function showGIF(gifSRC, delayEnter, delayExit) {
 }
 
 function showImage(imgSRC, delayEnter, delayExit){
-    var action = document.createElement("interface");
+    var action = document.createElement("img");
+    action.setAttribute("id", "interface");
     action.src = imgSRC;
 
     setTimeout(function () {
@@ -391,7 +380,7 @@ function loadLights(){
     light.shadow.camera.bottom = -512;
     light.shadow.mapSize.width= 8192;
     light.shadow.mapSize.height= 8192;
-    scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
+    // scene.add(new THREE.CameraHelper(light.shadow.camera))  // helper to view frustum
     scene.add(light);
 
     // Add Craft Beer Model Point Lights
@@ -399,13 +388,13 @@ function loadLights(){
     pl.position.set(300,19,112);
     pl.castShadow=true;
     scene.add(pl);
-    scene.add(new THREE.PointLightHelper(pl,0.5));
+    // scene.add(new THREE.PointLightHelper(pl,0.5));
     
     const pl2 = new THREE.PointLight(0xffffff, 3, 200, 0.7);
     pl2.position.set(375.5,19,112);
     pl2.castShadow=true;
     scene.add(pl2);
-    scene.add(new THREE.PointLightHelper(pl2,0.5));
+    // scene.add(new THREE.PointLightHelper(pl2,0.5));
 
     // Add Sahara Stage Spotlights
     const distance = 400.0;
@@ -415,7 +404,7 @@ function loadLights(){
     const decay = 0.5;
 
     const sl =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
-    sl.position.set(-140,100,500);
+    sl.position.set(-140,90,500);
     sl.target.position.set(-280,30,350);
     sl.castShadow=true;
     scene.add(sl);
@@ -423,7 +412,7 @@ function loadLights(){
     // scene.add(new THREE.SpotLightHelper(sl));
 
     const sl2 =  new THREE.SpotLight(0xFFA500, 400.0, distance, angle2, penumbra, decay);
-    sl2.position.set(-10,100,300);
+    sl2.position.set(-10,90,300);
     sl2.target.position.set(-280,0,150);
     sl2.castShadow=true;
     scene.add(sl2);
@@ -431,7 +420,7 @@ function loadLights(){
     // scene.add(new THREE.SpotLightHelper(sl2));
 
     const sl3 =  new THREE.SpotLight(0xFFAE42, 400.0, distance, angle, penumbra, decay);
-    sl3.position.set(-260,100,260);
+    sl3.position.set(-260,90,260);
     sl3.target.position.set(250,10,550);
     sl3.castShadow=true;
     scene.add(sl3);
@@ -439,7 +428,7 @@ function loadLights(){
     // scene.add(new THREE.SpotLightHelper(sl3));
 
     const sl4 =  new THREE.SpotLight(0xf2ad73, 200.0, distance, (Math.PI/3.0), 0.7, decay);
-    sl4.position.set(-180,130,300);
+    sl4.position.set(-180,120,300);
     sl4.target.position.set(-180,0,300);
     sl4.castShadow=true;
     scene.add(sl4);
@@ -451,7 +440,28 @@ function loadLights(){
     pl3.position.set(615,70,370);
     pl3.castShadow=true;
     scene.add(pl3);
-    scene.add(new THREE.PointLightHelper(pl3,0.5));
+    // scene.add(new THREE.PointLightHelper(pl3,0.5));
+
+    // Add Le Grande Wheel Point Lights
+    const pl4 = new THREE.PointLight(0xffffff, 300, 200, 0.7);
+    pl4.position.set(-323,12,-85);
+    pl4.castShadow=true;
+    scene.add(pl4);
+    // scene.add(new THREE.PointLightHelper(pl4,0.5));
+
+    const pl5 = new THREE.PointLight(0xffffff, 300, 200, 0.7);
+    pl5.position.set(-400,12,-201);
+    pl5.castShadow=true;
+    scene.add(pl5);
+    // scene.add(new THREE.PointLightHelper(pl5,0.5));
+
+    const sl5 =  new THREE.SpotLight(0xffffff, 100.0, distance, (Math.PI/3.0), 0.7, decay);
+    sl5.position.set(-276,1,-214);
+    sl5.target.position.set(-360,90,-147);
+    sl5.castShadow=true;
+    scene.add(sl5);
+    scene.add(sl5.target);
+    // scene.add(new THREE.SpotLightHelper(sl5));
 }
 
 // Check Landmark Interface
@@ -464,21 +474,32 @@ function checkLandmarkInterface(){
     const saharaMinX = -464.0, saharaMaxX = 241.0, saharaMinZ = 44, saharaMaxZ = 579;
     const wheelMinX = -501.0 , wheelMaxX= -237.0, wheelMinZ= -310.0, wheelMaxZ= 21.0;
     const barnMinX = 250.0, barnMaxX = 451.0, barnMinZ = -9.0, barnMaxZ = 147.0;
-    const labMinX = 250.0, labMaxX = 451.0, labMinZ = -9.0, labMaxZ = 147.0;
+    const labMinX = 420.0, labMaxX = 761.0, labMinZ = 240.0, labMaxZ = 491.0;
+    const spectraMinX = 249.0, spectraMaxX = 511.0, spectraMinZ = -430.0, spectraMaxZ = -290.0;
     
     // Checks if within bounds of Sahara Stage
     if (camera.position.x >= saharaMinX && camera.position.x <= saharaMaxX && camera.position.z >= saharaMinZ && camera.position.z <= saharaMaxZ){
-        showGIF(saharaTitle, 1000, 1500);
+        showImage(saharaTitle, 1000, 1500);
     }
 
     // Checks if within bounds of Le Grande Wheel
     if (camera.position.x >= wheelMinX && camera.position.x <= wheelMaxX && camera.position.z >= wheelMinZ && camera.position.z <= wheelMaxZ){
-        showGIF(wheelTitle, 1000, 1500);
+        showImage(wheelTitle, 1000, 1500);
     }
 
     // Checks if within bounds of Beer Barn
     if (camera.position.x >= barnMinX && camera.position.x <= barnMaxX && camera.position.z >= barnMinZ && camera.position.z <= barnMaxZ){
-        showGIF(beerTitle, 1000, 1500);
+        showImage(beerTitle, 1000, 1500);
+    }
+
+    // Checks if within bounds of Do Lab Stage
+    if (camera.position.x >= labMinX && camera.position.x <= labMaxX && camera.position.z >= labMinZ && camera.position.z <= labMaxZ){
+        showImage(labTitle, 1000, 1500);
+    }
+
+    // Checks if within bounds of Spectra Tower
+    if (camera.position.x >= spectraMinX && camera.position.x <= spectraMaxX && camera.position.z >= spectraMinZ && camera.position.z <= spectraMaxZ){
+        showImage(spectraTitle, 1000, 1500);
     }
     
 }
