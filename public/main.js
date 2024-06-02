@@ -161,6 +161,64 @@ function init() {
         }, delayExit);
     }
 
+    // Media player
+    let track_list = ["public/assets/Espresso.mp3", 
+        "public/assets/HOT TO GO!.mp3",
+    ];
+    let track_index = 0;
+    let isPlaying = false;
+    let curr_track = document.createElement("audio");
+    curr_track.src = track_list[track_index];
+
+    function playPauseMusic() {
+        if(!isPlaying) {
+            playMusic();
+        
+        } else pauseMusic();
+    }
+
+    function playMusic() {
+        
+        curr_track.play();
+        isPlaying = true;
+    }
+
+    function pauseMusic() {
+        curr_track.pause();
+        isPlaying = false;
+    }
+
+    
+    function loadMusic(index) {
+        curr_track.src = track_list[index];
+        curr_track.load();
+
+        curr_track.addEventListener("ended", nextSong());
+    }
+
+    function nextSong() {
+        if (track_index < track_list.length - 1) {
+            track_index += 1;
+        } else {
+            track_index = 0;
+        }
+
+        curr_track.src = track_list[track_index];
+        playMusic();
+    }
+
+    function prevSong() {
+        if (track_index > 0) {
+            track_index -= 1;
+        } 
+        else {
+            track_index = track_list.length - 1;
+        }
+
+        curr_track.src = track_list[track_index];
+        playMusic();
+    }
+
     // movement key listeners
     const onKeyDown = function(event) {
         switch (event.code) {
@@ -192,6 +250,16 @@ function init() {
                 drinkMp3.play();
                 showGIF(drinkGIF, 0, 2000)
                 break;
+            case 'Space':
+                playPauseMusic();
+                break;
+            case 'KeyQ':
+                prevSong();
+                break;
+            case 'KeyE':
+                nextSong();
+                break;
+                
         }
     };
 
@@ -275,5 +343,7 @@ function animate() {
     prevTime = time;
     renderer.render(scene, camera);
 }
+
+
 
 init();
